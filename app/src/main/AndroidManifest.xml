@@ -21,6 +21,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".screen.product.ProductActivity"/>
+        <activity android:name=".screen.review.ReviewActivity"/>
     </application>
 
 </manifest>
