@@ -7,5 +7,5 @@ data class ProductDetail(
     val price : Int,
     val categories : List<Category>,
     val caption : String,
-    val hashtags : List<Hashtag>
+    val hashtags : List<String>
 )
