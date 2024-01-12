@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:layout_width="100dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/img_product"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/gray1"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_rank"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:background="@color/black"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        tools:text="1"
+        android:includeFontPadding="false"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_product_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/img_product"
+        android:layout_marginTop="4dp"
+        android:textSize="12sp"
+        tools:text="상품 이름"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_product_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_product_name"
+        android:textSize="12sp"
+        android:layout_marginTop="2dp"
+        tools:text="139000원"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
