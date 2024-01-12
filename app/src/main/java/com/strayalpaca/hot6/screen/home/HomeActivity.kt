@@ -2,7 +2,9 @@ package com.strayalpaca.hot6.screen.home
 
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.strayalpaca.hot6.R
@@ -38,8 +40,10 @@ class HomeActivity : ViewBindingActivity<ActivityHomeBinding>(ActivityHomeBindin
 
     private fun initObserver() {
         lifecycleScope.launch {
-            viewModel.homeScreenState.collectLatest { state ->
-                applyHomeScreenState(state)
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.homeScreenState.collectLatest { state ->
+                    applyHomeScreenState(state)
+                }
             }
         }
     }
