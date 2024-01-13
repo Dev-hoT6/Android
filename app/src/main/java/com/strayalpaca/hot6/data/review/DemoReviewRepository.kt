@@ -13,4 +13,7 @@ class DemoReviewRepository : ReviewRepository {
         )
     }
     override suspend fun getReviewList(productId: String): List<Review> = reviews
+    override suspend fun uploadReviewText(text: String, productId: String): Boolean {
+        return productId.isEmpty() || productId[0] == '2'
+    }
 }
