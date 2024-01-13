@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/btn_back"
@@ -67,16 +68,34 @@
                 android:textColor="@color/gray4"
                 android:textSize="12sp"/>
 
-
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/edit_review"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:minHeight="200dp"
                 android:layout_marginTop="12dp"
+                android:background="@drawable/background_edit_review"
+                android:paddingTop="12dp"
+                android:paddingBottom="20dp"
+                android:paddingHorizontal="12dp"
+                android:gravity="top"
+                android:textSize="14sp"
+                tools:text="reveiew"
+                android:hint="@string/placeholder_review_text"
+                android:textColorHint="@color/gray2"
                 app:layout_constraintTop_toBottomOf="@id/tv_caption_input_review"
                 app:layout_constraintStart_toStartOf="@id/guideline_start"
                 app:layout_constraintEnd_toEndOf="@id/guideline_end"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_text_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/edit_review"
+                app:layout_constraintEnd_toEndOf="@id/edit_review"
+                android:layout_margin="8dp"
+                android:textSize="12sp"
+                tools:text="0/120"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_input_photo"
@@ -101,6 +120,7 @@
                     android:id="@+id/img_photo"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
                     android:background="@color/gray1"/>
                 
                 <androidx.appcompat.widget.AppCompatImageView
@@ -120,8 +140,9 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:background="@color/gray2"
-                android:tint="@color/black"
+                android:tint="@color/gray4"
                 android:src="@drawable/ic_add"
+                android:padding="24dp"
                 android:layout_marginTop="16dp"
                 app:layout_constraintTop_toBottomOf="@id/tv_input_photo"
                 app:layout_constraintStart_toEndOf="@id/layout_photo"/>
