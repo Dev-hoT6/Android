@@ -16,8 +16,10 @@ import com.strayalpaca.hot6.screen.product.recycler.hashtag.HashtagItemDecoratio
 import com.strayalpaca.hot6.screen.product.recycler.review.ReviewItemAdapter
 import com.strayalpaca.hot6.screen.product.recycler.review.ReviewItemDecoration
 import com.strayalpaca.hot6.screen.review.ReviewActivity
+import com.strayalpaca.hot6.utils.joinToStringExceptSingle
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.util.ArrayList
 
 class ProductActivity : ViewBindingActivity<ActivityProductBinding>(ActivityProductBinding::inflate) {
 
@@ -59,9 +61,12 @@ class ProductActivity : ViewBindingActivity<ActivityProductBinding>(ActivityProd
         }
 
         binding.tvbtnWriteReview.setOnClickListener {
-            Intent(this, ReviewActivity::class.java).putExtra("product_id", viewModel.getProductId()).run {
-                startActivity(this)
-            }
+            Intent(this, ReviewActivity::class.java)
+                .putExtra("product_id", viewModel.getProductId())
+                .putStringArrayListExtra("category_id_list", ArrayList(viewModel.getCategoryIdList()))
+                .run {
+                    startActivity(this)
+                }
         }
     }
 
@@ -142,7 +147,7 @@ class ProductActivity : ViewBindingActivity<ActivityProductBinding>(ActivityProd
 
     private fun applyProductDetailData(data : ProductDetailData) {
         binding.tvProductName.text = data.name
-        binding.tvCategory.text = data.categories
+        binding.tvCategory.text = data.categories.map { it.name }.joinToStringExceptSingle(" > ")
         binding.tvProductPrice.text = getString(R.string.form_price, data.price)
         binding.tvDetailProduct.text = data.caption
         binding.tvCaptionProvide.text = getString(R.string.caption_provide)

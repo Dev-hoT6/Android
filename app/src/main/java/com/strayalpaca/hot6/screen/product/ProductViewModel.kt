@@ -7,8 +7,8 @@ import com.strayalpaca.hot6.data.product.DemoProductRepository
 import com.strayalpaca.hot6.data.product.ProductRepository
 import com.strayalpaca.hot6.data.review.DemoReviewRepository
 import com.strayalpaca.hot6.data.review.ReviewRepository
+import com.strayalpaca.hot6.domain.product.Category
 import com.strayalpaca.hot6.domain.review.Review
-import com.strayalpaca.hot6.utils.joinToStringExceptSingle
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,6 +38,15 @@ class ProductViewModel(
 
     fun getProductId() = productId
 
+    fun getCategoryIdList() : List<String> {
+        val currentState = productDetailState.value
+        if (currentState !is ProductDetailState.Success) {
+            return emptyList()
+        }
+
+        return currentState.data.categories.map { it.id }
+    }
+
     fun setProductId(productId: String) {
         this.productId = productId
     }
@@ -53,7 +62,7 @@ class ProductViewModel(
                         price = this.price,
                         caption = this.caption,
                         hashtags = this.hashtags.map { "#$it" },
-                        categories = this.categories.map { it.name }.joinToStringExceptSingle(" > ")
+                        categories = this.categories
                     )
                 }.also {
                     _productDetailState.value = ProductDetailState.Success(it)
@@ -99,7 +108,7 @@ data class ProductDetailData(
     val price : Int,
     val caption : String,
     val hashtags : List<String>,
-    val categories : String
+    val categories : List<Category>
 )
 
 sealed class ReviewListState {
