@@ -1,7 +1,9 @@
 package com.strayalpaca.hot6.screen.product
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
@@ -24,6 +26,12 @@ import java.util.ArrayList
 class ProductActivity : ViewBindingActivity<ActivityProductBinding>(ActivityProductBinding::inflate) {
 
     private val viewModel by viewModels<ProductViewModel> { ProductViewModel.Factory }
+    private val reviewScreenLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            viewModel.loadReviewList()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val productId = intent.getStringExtra("product_id")
@@ -65,7 +73,7 @@ class ProductActivity : ViewBindingActivity<ActivityProductBinding>(ActivityProd
                 .putExtra("product_id", viewModel.getProductId())
                 .putStringArrayListExtra("category_id_list", ArrayList(viewModel.getCategoryIdList()))
                 .run {
-                    startActivity(this)
+                    reviewScreenLauncher.launch(this)
                 }
         }
     }
@@ -107,11 +115,11 @@ class ProductActivity : ViewBindingActivity<ActivityProductBinding>(ActivityProd
     }
 
     private fun setReviewListLoading(show : Boolean) {
-
+        binding.viewReviewLoading.root.isVisible = show
     }
 
     private fun setReviewListError(show : Boolean) {
-
+        binding.viewReviewError.root.isVisible = show
     }
 
     private fun applyReviewListData(reviewListData: ReviewListData) {
@@ -138,11 +146,11 @@ class ProductActivity : ViewBindingActivity<ActivityProductBinding>(ActivityProd
     }
 
     private fun setProductDetailLoading(show : Boolean) {
-
+        binding.viewProductLoading.root.isVisible = show
     }
 
     private fun setProductDetailError(show : Boolean) {
-
+        binding.viewProductError.root.isVisible = show
     }
 
     private fun applyProductDetailData(data : ProductDetailData) {

@@ -13,6 +13,7 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ProductViewModel(
@@ -29,11 +30,11 @@ class ProductViewModel(
     private var productId : String = "-"
 
     private val loadProductDetailExceptionHandler = CoroutineExceptionHandler { _, _ ->
-        _productDetailState.value = ProductDetailState.Error
+        _productDetailState.update { ProductDetailState.Error }
     }
 
     private val loadReviewListExceptionHandler = CoroutineExceptionHandler { _, _ ->
-        _reviewListState.value = ReviewListState.Error
+        _reviewListState.update { ReviewListState.Error }
     }
 
     fun getProductId() = productId
@@ -53,6 +54,7 @@ class ProductViewModel(
 
     fun loadProductDetail() {
         viewModelScope.launch(Dispatchers.IO + loadProductDetailExceptionHandler) {
+            _productDetailState.update { ProductDetailState.Loading }
             productRepository.getProductDetail(productId)
                 .run {
                     ProductDetailData(
@@ -64,14 +66,17 @@ class ProductViewModel(
                         hashtags = this.hashtags.map { "#$it" },
                         categories = this.categories
                     )
-                }.also {
-                    _productDetailState.value = ProductDetailState.Success(it)
+                }.also { data ->
+                    _productDetailState.update {
+                        ProductDetailState.Success(data)
+                    }
                 }
         }
     }
 
     fun loadReviewList() {
         viewModelScope.launch(Dispatchers.IO + loadReviewListExceptionHandler) {
+            _reviewListState.update { ReviewListState.Loading }
             reviewRepository.getReviewList(productId)
                 .run {
                     ReviewListData(

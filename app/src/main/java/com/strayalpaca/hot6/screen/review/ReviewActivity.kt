@@ -140,6 +140,7 @@ class ReviewActivity : ViewBindingActivity<ActivityReviewBinding>(ActivityReview
             }
             ReviewState.UploadSuccess -> {
                 Toast.makeText(baseContext, getString(R.string.success_request_review), Toast.LENGTH_SHORT).show()
+                setResult(RESULT_OK)
                 finish()
             }
         }

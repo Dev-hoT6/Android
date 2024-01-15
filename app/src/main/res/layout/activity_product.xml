@@ -143,6 +143,23 @@
                 android:textColor="@color/gray4"
                 android:text="@string/caption_provide"/>
 
+            <include
+                android:id="@+id/view_product_loading"
+                layout="@layout/view_loading"
+                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                app:layout_constraintTop_toTopOf="@id/iv_product_image"
+                app:layout_constraintBottom_toTopOf="@id/divider_review"/>
+
+            <include
+                android:id="@+id/view_product_error"
+                layout="@layout/view_error"
+                android:visibility="gone"
+                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                app:layout_constraintTop_toTopOf="@id/iv_product_image"
+                app:layout_constraintBottom_toTopOf="@id/divider_review"/>
+
             <View
                 android:id="@+id/divider_review"
                 android:layout_width="match_parent"
@@ -178,12 +195,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/tv_customer_review"
-                android:layout_marginTop="12dp"/>
+                android:minHeight="120dp"
+                android:paddingBottom="32dp"
+                android:layout_marginTop="12dp" />
 
-            <View
+            <include
+                android:id="@+id/view_review_loading"
+                layout="@layout/view_loading"
+                android:layout_height="0dp"
                 android:layout_width="match_parent"
-                android:layout_height="36dp"
-                app:layout_constraintTop_toBottomOf="@id/list_review"/>
+                app:layout_constraintTop_toTopOf="@id/list_review"
+                app:layout_constraintBottom_toBottomOf="@id/list_review"/>
+
+            <include
+                android:id="@+id/view_review_error"
+                layout="@layout/view_error"
+                android:visibility="gone"
+                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                app:layout_constraintTop_toTopOf="@id/list_review"
+                app:layout_constraintBottom_toBottomOf="@id/list_review"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
