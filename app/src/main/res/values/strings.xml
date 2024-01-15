@@ -31,4 +31,6 @@
     <string name="error_empty_review">리뷰를 작성해주세요.</string>
     <string name="success_request_review">리뷰가 작성되었습니다</string>
     <string name="error_request_review">리뷰 작성중 네트워크 에러가 발생했습니다. 잠시 후 다시 시도해주세요</string>
+
+    <string name="general_error_message">로딩 중 에러가 발생했습니다.\n잠시 후 다시 시도해주세요.</string>
 </resources>
