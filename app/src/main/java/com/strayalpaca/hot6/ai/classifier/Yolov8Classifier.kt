@@ -36,9 +36,9 @@ class Yolov8Classifier(private val context : Context) : ImageCategoryClassifier 
     }
 
     override fun close() {
-        modelManager.detachContext()
-        ortEnvironment.close()
-        session.close()
+        if (::modelManager.isInitialized) { modelManager.detachContext() }
+        if (::ortEnvironment.isInitialized) { ortEnvironment.close() }
+        if (::session.isInitialized) { session.close() }
     }
 
     @Suppress("UNCHECKED_CAST")
