@@ -29,7 +29,8 @@ class ReviewViewModel(
     val showEmptyTextMessage = _showEmptyTextMessage.asSharedFlow()
 
     private var productId : String = "-"
-    private var categoryIdList : List<String> = emptyList()
+    var categoryIdList : List<String> = emptyList()
+        private set
 
     private val reviewUploadErrorHandler = CoroutineExceptionHandler{ _, _ ->
         _reviewState.value = ReviewState.Error

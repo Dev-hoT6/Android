@@ -16,6 +16,8 @@ import com.strayalpaca.hot6.R
 import com.strayalpaca.hot6.base.ViewBindingActivity
 import com.strayalpaca.hot6.base.dialog.OneButtonDialog
 import com.strayalpaca.hot6.databinding.ActivityReviewBinding
+import com.strayalpaca.hot6.ai.classifier.ImageCategoryClassifier
+import com.strayalpaca.hot6.ai.classifier.Yolov8Classifier
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -23,6 +25,7 @@ class ReviewActivity : ViewBindingActivity<ActivityReviewBinding>(ActivityReview
 
     private val viewModel by viewModels<ReviewViewModel> { ReviewViewModel.Factory }
     private val maxReviewCount = 120
+    private lateinit var imageCategoryClassifier : ImageCategoryClassifier
 
     private val getImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri : Uri? ->
         viewModel.setImage(uri?.toString())
@@ -44,6 +47,14 @@ class ReviewActivity : ViewBindingActivity<ActivityReviewBinding>(ActivityReview
         initButton()
         initEditText()
         initObserver()
+
+        imageCategoryClassifier = Yolov8Classifier(baseContext)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        imageCategoryClassifier.close()
     }
 
     private fun handleInvalidIntentExtra() {
@@ -97,6 +108,15 @@ class ReviewActivity : ViewBindingActivity<ActivityReviewBinding>(ActivityReview
                         toggleImageContainerAndImageAdder(showContainer = imageUrl != null)
                         imageUrl?.let { url ->
                             Glide.with(baseContext).load(url).into(binding.imgPhoto)
+                        }
+
+                        // model test
+                        imageUrl?.let {
+                            if (!imageCategoryClassifier.isLoaded()) {
+                                load()
+                            }
+
+                            preferenceImage(it)
                         }
                     }
                 }
@@ -160,5 +180,16 @@ class ReviewActivity : ViewBindingActivity<ActivityReviewBinding>(ActivityReview
             buttonText = getString(R.string.confirmation),
             buttonClick = viewModel::closeRejectDialog
         ).show(supportFragmentManager, "review reject dialog")
+    }
+
+    private fun load() {
+        imageCategoryClassifier.load()
+    }
+
+    private fun preferenceImage(url : String) {
+        val answer = imageCategoryClassifier.preferenceByUrl(url, viewModel.categoryIdList)
+        if (!answer) {
+            callReviewRejectDialog()
+        }
     }
 }
