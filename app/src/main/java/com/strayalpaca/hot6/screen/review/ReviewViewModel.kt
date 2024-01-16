@@ -3,7 +3,7 @@ package com.strayalpaca.hot6.screen.review
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.strayalpaca.hot6.data.review.DemoReviewRepository
+import com.strayalpaca.hot6.ai.classifier.ImageCategoryClassifier
 import com.strayalpaca.hot6.data.review.ReviewRepository
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
@@ -11,10 +11,12 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ReviewViewModel(
-    private val reviewRepository: ReviewRepository
+    private val reviewRepository: ReviewRepository,
+    private val imageCategoryClassifier: ImageCategoryClassifier
 ) : ViewModel() {
     private val _reviewText = MutableStateFlow("")
     val reviewText = _reviewText.asStateFlow()
@@ -36,6 +38,11 @@ class ReviewViewModel(
         _reviewState.value = ReviewState.Error
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        imageCategoryClassifier.close()
+    }
+
     fun setProductIdAndCategoryId(productId : String, categoryIdList : List<String>) {
         this.productId = productId
         this.categoryIdList = categoryIdList
@@ -46,7 +53,27 @@ class ReviewViewModel(
     }
 
     fun setImage(imageUrl : String?) {
-        _imageUrl.value = imageUrl
+        viewModelScope.launch(Dispatchers.Default) {
+            if (imageUrl == null) {
+                _imageUrl.update { null }
+                return@launch
+            }
+
+            if (!imageCategoryClassifier.isLoaded()) {
+                _reviewState.update { ReviewState.ImageModelLoading }
+                imageCategoryClassifier.load()
+                _reviewState.update { ReviewState.IDLE }
+            }
+
+            imageCategoryClassifier.preferenceByUrl(imageUrl, categoryIdList).run {
+                if (this) {
+                    _imageUrl.update { imageUrl }
+                } else {
+                    _reviewState.update { ReviewState.ImageReject }
+                }
+            }
+
+        }
     }
 
     fun uploadReview() {
@@ -68,10 +95,13 @@ class ReviewViewModel(
     }
 
     companion object {
-        val Factory : ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+        class Factory(
+            private val reviewRepository: ReviewRepository,
+            private val imageCategoryClassifier: ImageCategoryClassifier
+        ) : ViewModelProvider.Factory  {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return ReviewViewModel(DemoReviewRepository()) as T
+                return ReviewViewModel(reviewRepository, imageCategoryClassifier) as T
             }
         }
     }
@@ -83,4 +113,6 @@ sealed class ReviewState {
     object Reject : ReviewState()
     object UploadSuccess : ReviewState()
     object Error : ReviewState()
+    object ImageModelLoading : ReviewState()
+    object ImageReject : ReviewState()
 }

@@ -18,12 +18,13 @@ import com.strayalpaca.hot6.base.dialog.OneButtonDialog
 import com.strayalpaca.hot6.databinding.ActivityReviewBinding
 import com.strayalpaca.hot6.ai.classifier.ImageCategoryClassifier
 import com.strayalpaca.hot6.ai.classifier.Yolov8Classifier
+import com.strayalpaca.hot6.data.review.DemoReviewRepository
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class ReviewActivity : ViewBindingActivity<ActivityReviewBinding>(ActivityReviewBinding::inflate) {
 
-    private val viewModel by viewModels<ReviewViewModel> { ReviewViewModel.Factory }
+    private val viewModel by viewModels<ReviewViewModel> { ReviewViewModel.Companion.Factory(DemoReviewRepository(), Yolov8Classifier(baseContext)) }
     private val maxReviewCount = 120
     private lateinit var imageCategoryClassifier : ImageCategoryClassifier
 
@@ -109,15 +110,6 @@ class ReviewActivity : ViewBindingActivity<ActivityReviewBinding>(ActivityReview
                         imageUrl?.let { url ->
                             Glide.with(baseContext).load(url).into(binding.imgPhoto)
                         }
-
-                        // model test
-                        imageUrl?.let {
-                            if (!imageCategoryClassifier.isLoaded()) {
-                                load()
-                            }
-
-                            preferenceImage(it)
-                        }
                     }
                 }
 
@@ -145,25 +137,43 @@ class ReviewActivity : ViewBindingActivity<ActivityReviewBinding>(ActivityReview
     private fun applyReviewState(state : ReviewState) {
         when (state) {
             ReviewState.IDLE -> {
+                setLoading(show = false)
                 setButtonsEnabled(enabled = true)
             }
             ReviewState.Error -> {
+                setLoading(show = false)
                 Toast.makeText(baseContext, getString(R.string.error_request_review), Toast.LENGTH_SHORT).show()
                 setButtonsEnabled(enabled = true)
             }
             ReviewState.Loading -> {
+                setLoading(show = true)
                 setButtonsEnabled(enabled = false)
             }
             ReviewState.Reject -> {
+                setLoading(show = false)
                 setButtonsEnabled(enabled = true)
                 callReviewRejectDialog()
             }
             ReviewState.UploadSuccess -> {
+                setLoading(show = false)
                 Toast.makeText(baseContext, getString(R.string.success_request_review), Toast.LENGTH_SHORT).show()
                 setResult(RESULT_OK)
                 finish()
             }
+            ReviewState.ImageModelLoading -> {
+                setLoading(show = true)
+                setButtonsEnabled(enabled = true)
+            }
+            ReviewState.ImageReject -> {
+                setLoading(show = false)
+                setButtonsEnabled(enabled = true)
+                callImageRejectDialog()
+            }
         }
+    }
+
+    private fun setLoading(show : Boolean) {
+        binding.viewLoading.root.isVisible = show
     }
 
     private fun setButtonsEnabled(enabled : Boolean) {
@@ -182,14 +192,12 @@ class ReviewActivity : ViewBindingActivity<ActivityReviewBinding>(ActivityReview
         ).show(supportFragmentManager, "review reject dialog")
     }
 
-    private fun load() {
-        imageCategoryClassifier.load()
-    }
-
-    private fun preferenceImage(url : String) {
-        val answer = imageCategoryClassifier.preferenceByUrl(url, viewModel.categoryIdList)
-        if (!answer) {
-            callReviewRejectDialog()
-        }
+    private fun callImageRejectDialog() {
+        OneButtonDialog(
+            title = getString(R.string.reject_image),
+            caption = getString(R.string.caption_reject_image),
+            buttonText = getString(R.string.confirmation),
+            buttonClick = viewModel::closeRejectDialog
+        ).show(supportFragmentManager, "review reject dialog")
     }
 }
