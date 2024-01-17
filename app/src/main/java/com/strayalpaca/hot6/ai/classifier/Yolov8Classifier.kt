@@ -6,6 +6,7 @@ import ai.onnxruntime.OrtSession
 import android.content.Context
 import com.strayalpaca.hot6.ai.ImageHandler
 import com.strayalpaca.hot6.ai.ModelManager
+import com.strayalpaca.hot6.utils.modelPreferenceIndexToCategoryId
 import java.util.Collections
 
 class Yolov8Classifier(private val context : Context) : ImageCategoryClassifier {
@@ -55,7 +56,7 @@ class Yolov8Classifier(private val context : Context) : ImageCategoryClassifier 
             val currentCategoryIndex = 4 + i
             val contain = outputs[0][currentCategoryIndex].filter { it > 0.5f }
             if (contain.isNotEmpty()) {
-                detectedCategoryIds.add(i.toString())
+                detectedCategoryIds.add(modelPreferenceIndexToCategoryId(i))
             }
         }
 

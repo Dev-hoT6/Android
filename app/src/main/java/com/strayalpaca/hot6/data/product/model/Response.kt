@@ -2,6 +2,7 @@ package com.strayalpaca.hot6.data.product.model
 
 import com.strayalpaca.hot6.domain.product.Category
 import com.strayalpaca.hot6.domain.product.ProductDetail
+import com.strayalpaca.hot6.utils.getCategoryIdByName
 
 data class ResponseProductList(
     val n_goods : Int,
@@ -23,7 +24,7 @@ data class ResponseProductDetail(
             imageUrl = product_image_url,
             price = product_price,
             caption = "${product_name}에 대한 상세설명입니다.",
-            categories = listOf(Category("-", category1_name)),
+            categories = listOf(Category(getCategoryIdByName(category1_name), category1_name)),
             hashtags = product_hashtags?.split(" ") ?: emptyList()
         )
     }
