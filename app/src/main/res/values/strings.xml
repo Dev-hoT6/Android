@@ -25,6 +25,8 @@
 
     <string name="reject_request_review">리뷰 등록 거부</string>
     <string name="caption_reject_request_review">실제 상품과 관련이 없는 리뷰글로 판단되어 리뷰 등록이 거부되었습니다.\n실제 상품과 관련이 있는 리뷰인 경우 운영 이메일로 문의해주세요.</string>
+    <string name="reject_image">이미지 등록 실패</string>
+    <string name="caption_reject_image">실제 상품과 관련이 없는 이미지로 판단되어 이미지 등록이 거부되었습니다.\n실제 상품과 관련이 있는 사진만 사용가능합니다.</string>
     <string name="confirmation">확인</string>
     <string name="form_text_count">%d/%d</string>
     <string name="placeholder_review_text">텍스트를 입력해주세요.</string>
