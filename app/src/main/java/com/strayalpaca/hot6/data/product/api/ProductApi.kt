@@ -13,6 +13,6 @@ interface ProductApi {
     @GET("product/category/{Category_ID}")
     suspend fun getProductListByCategory(@Path("Category_ID") Category_ID : String) : Response<ResponseProductList>
 
-    @GET("detail/{ProductID}")
+    @GET("detail/product/{ProductID}")
     suspend fun getProductDetail(@Path("ProductID") ProductID : String) : Response<ResponseProductDetail>
 }
