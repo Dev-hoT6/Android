@@ -48,7 +48,8 @@ class HomeViewModel(
                     HomeScreenData(
                         categories = second,
                         productList = first,
-                        totalCount = first.size
+                        totalCount = first.size,
+                        selectedCategoryId = null
                     )
                 }.also {
                     _homeScreenState.value = HomeScreenState.Success(it)
@@ -61,7 +62,7 @@ class HomeViewModel(
         viewModelScope.launch(Dispatchers.IO + loadProductListExceptionHandler) {
             productRepository.getProductListByCategory(categoryId)
                 .also { productList ->
-                    _homeScreenState.update { HomeScreenState.Success(it.data.copy(productList = productList, totalCount = productList.size)) }
+                    _homeScreenState.update { HomeScreenState.Success(it.data.copy(productList = productList, totalCount = productList.size, selectedCategoryId = categoryId)) }
                 }
         }
     }
