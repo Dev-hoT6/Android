@@ -11,18 +11,17 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val productRepository: ProductRepository
 ) : ViewModel() {
-    private val _homeScreenState = MutableStateFlow<HomeScreenState>(HomeScreenState.Loading)
+    private val _homeScreenState = MutableStateFlow<HomeScreenState>(HomeScreenState.Loading())
     val homeScreenState = _homeScreenState.asStateFlow()
 
-    private val allProductList = mutableListOf<ProductItem>()
-
     private val loadProductListExceptionHandler = CoroutineExceptionHandler { _, _ ->
-        _homeScreenState.value = HomeScreenState.Error
+        _homeScreenState.value = HomeScreenState.Error()
     }
 
     init {
@@ -33,20 +32,11 @@ class HomeViewModel(
         val currentState = homeScreenState.value
         if (currentState !is HomeScreenState.Success) return
 
+        _homeScreenState.update { HomeScreenState.Loading(it.data) }
         if (categoryId == currentState.data.selectedCategoryId || categoryId == null) {
-            _homeScreenState.value = HomeScreenState.Success(
-                currentState.data.copy(
-                    productList = allProductList,
-                    selectedCategoryId = null
-                )
-            )
+            loadProductList()
         } else {
-            _homeScreenState.value = HomeScreenState.Success(
-                currentState.data.copy(
-                    productList = allProductList.filter { it.category.id == categoryId },
-                    selectedCategoryId = categoryId
-                )
-            )
+            loadProductListByCategory(categoryId)
         }
 
     }
@@ -54,18 +44,25 @@ class HomeViewModel(
     private fun loadProductList() {
         viewModelScope.launch(Dispatchers.IO + loadProductListExceptionHandler) {
             productRepository.getProductList()
-                .run {
+                .run { // first = List<Product>, second = List<Category>
                     HomeScreenData(
-                        categories = this.map { it.category },
-                        productList = this,
-                        totalCount = this.size
+                        categories = second,
+                        productList = first,
+                        totalCount = first.size
                     )
                 }.also {
-                    allProductList.clear()
-                    allProductList.addAll(it.productList)
                     _homeScreenState.value = HomeScreenState.Success(it)
                 }
 
+        }
+    }
+
+    private fun loadProductListByCategory(categoryId : String) {
+        viewModelScope.launch(Dispatchers.IO + loadProductListExceptionHandler) {
+            productRepository.getProductListByCategory(categoryId)
+                .also { productList ->
+                    _homeScreenState.update { HomeScreenState.Success(it.data.copy(productList = productList, totalCount = productList.size)) }
+                }
         }
     }
 
@@ -80,15 +77,15 @@ class HomeViewModel(
 }
 
 
-sealed class HomeScreenState{
-    object Loading : HomeScreenState()
-    class Success(val data : HomeScreenData) : HomeScreenState()
-    object Error : HomeScreenState()
+sealed class HomeScreenState(val data : HomeScreenData){
+    class Loading(data : HomeScreenData = HomeScreenData()) : HomeScreenState(data)
+    class Success(data : HomeScreenData) : HomeScreenState(data)
+    class Error(data : HomeScreenData = HomeScreenData()) : HomeScreenState(data)
 }
 
 data class HomeScreenData(
-    val categories : List<Category>,
-    val productList : List<ProductItem>,
-    val totalCount : Int,
+    val categories : List<Category> = emptyList(),
+    val productList : List<ProductItem> = emptyList(),
+    val totalCount : Int = 0,
     val selectedCategoryId : String ?= null
 )
