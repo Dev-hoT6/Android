@@ -11,7 +11,7 @@ data class ResponseProductList(
 
 data class ResponseProductDetail(
     val product_name : String,
-    val product_hashtags : String,
+    val product_hashtags : String?,
     val product_price : Int,
     val product_image_url : String,
     val category1_name : String
@@ -24,7 +24,7 @@ data class ResponseProductDetail(
             price = product_price,
             caption = "${product_name}에 대한 상세설명입니다.",
             categories = listOf(Category("-", category1_name)),
-            hashtags = product_hashtags.split(" ")
+            hashtags = product_hashtags?.split(" ") ?: emptyList()
         )
     }
 }
