@@ -3,8 +3,9 @@ package com.strayalpaca.hot6.screen.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.strayalpaca.hot6.data.product.DemoProductRepository
+import com.strayalpaca.hot6.base.retrofit.RetrofitClient
 import com.strayalpaca.hot6.data.product.ProductRepository
+import com.strayalpaca.hot6.data.product.RemoteProductRepository
 import com.strayalpaca.hot6.domain.product.Category
 import com.strayalpaca.hot6.domain.product.ProductItem
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -21,7 +22,7 @@ class HomeViewModel(
     val homeScreenState = _homeScreenState.asStateFlow()
 
     private val loadProductListExceptionHandler = CoroutineExceptionHandler { _, _ ->
-        _homeScreenState.value = HomeScreenState.Error()
+        _homeScreenState.update { HomeScreenState.Error(it.data.copy(productList = emptyList(), selectedCategoryId = null)) }
     }
 
     init {
@@ -30,7 +31,7 @@ class HomeViewModel(
 
     fun setCategory(categoryId : String?) {
         val currentState = homeScreenState.value
-        if (currentState !is HomeScreenState.Success) return
+        if (currentState is HomeScreenState.Loading) return
 
         _homeScreenState.update { HomeScreenState.Loading(it.data) }
         if (categoryId == currentState.data.selectedCategoryId || categoryId == null) {
@@ -71,7 +72,7 @@ class HomeViewModel(
         val Factory : ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return HomeViewModel(DemoProductRepository()) as T
+                return HomeViewModel(RemoteProductRepository(RetrofitClient.getInstance())) as T
             }
         }
     }

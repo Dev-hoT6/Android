@@ -3,9 +3,10 @@ package com.strayalpaca.hot6.screen.product
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.strayalpaca.hot6.data.product.DemoProductRepository
+import com.strayalpaca.hot6.base.retrofit.RetrofitClient
 import com.strayalpaca.hot6.data.product.ProductRepository
-import com.strayalpaca.hot6.data.review.DemoReviewRepository
+import com.strayalpaca.hot6.data.product.RemoteProductRepository
+import com.strayalpaca.hot6.data.review.RemoteReviewRepository
 import com.strayalpaca.hot6.data.review.ReviewRepository
 import com.strayalpaca.hot6.domain.product.Category
 import com.strayalpaca.hot6.domain.review.Review
@@ -93,7 +94,7 @@ class ProductViewModel(
         val Factory : ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return ProductViewModel(DemoProductRepository(), DemoReviewRepository()) as T
+                return ProductViewModel(RemoteProductRepository(RetrofitClient.getInstance()), RemoteReviewRepository(RetrofitClient.getInstance())) as T
             }
         }
     }
