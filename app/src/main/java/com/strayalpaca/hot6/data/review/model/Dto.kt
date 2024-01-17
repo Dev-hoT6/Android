@@ -7,14 +7,16 @@ data class ReviewDto(
     val review_writer : String,
     val review_content : String,
     val review_image_path : String?,
-    val review_status : Int
+    val review_status : Int,
+    val review_points : Int?
 ) {
     fun toReview() : Review {
         return Review(
             id = review_id,
             writerName = review_writer,
             text = review_content,
-            imageUrl = review_image_path
+            imageUrl = review_image_path,
+            point = review_points
         )
     }
 }
