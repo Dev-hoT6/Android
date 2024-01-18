@@ -3,7 +3,9 @@ package com.strayalpaca.hot6.screen.review
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.strayalpaca.hot6.ai.ImageHandler
 import com.strayalpaca.hot6.ai.classifier.ImageCategoryClassifier
+import com.strayalpaca.hot6.ai.review.ReviewCategoryClassifier
 import com.strayalpaca.hot6.data.review.ReviewRepository
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
@@ -13,10 +15,13 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ReviewViewModel(
     private val reviewRepository: ReviewRepository,
-    private val imageCategoryClassifier: ImageCategoryClassifier
+    private val imageCategoryClassifier: ImageCategoryClassifier,
+    private val reviewCategoryClassifier: ReviewCategoryClassifier,
+    private val imageHandler: ImageHandler
 ) : ViewModel() {
     private val _reviewText = MutableStateFlow("")
     val reviewText = _reviewText.asStateFlow()
@@ -41,6 +46,7 @@ class ReviewViewModel(
     override fun onCleared() {
         super.onCleared()
         imageCategoryClassifier.close()
+        reviewCategoryClassifier.close()
     }
 
     fun setProductIdAndCategoryId(productId : String, categoryIdList : List<String>) {
@@ -83,10 +89,35 @@ class ReviewViewModel(
                 return@launch
             }
 
-            reviewRepository.uploadReviewText(reviewText.value, productId).also { success ->
-                if (success) _reviewState.value = ReviewState.UploadSuccess
-                else _reviewState.value = ReviewState.Reject
+            if (!reviewCategoryClassifier.isLoaded()) {
+                loadReviewTextModel()
             }
+
+            val (reviewId : String, reviewVector : List<List<Double>>) = reviewRepository.getReviewVector(reviewText.value, productId)
+            val related = withContext(Dispatchers.Default) { reviewCategoryClassifier.preferenceRelated(reviewVector) }
+            if (!related) {
+                _reviewState.update { ReviewState.Reject }
+                return@launch
+            }
+
+            _reviewState.update { ReviewState.Loading }
+            val file = imageUrl.value?.let {
+                imageHandler.urlToFile(it)
+            }
+            val response = reviewRepository.uploadReview(reviewId, file)
+            if (response) {
+                _reviewState.update { ReviewState.UploadSuccess }
+            } else {
+                _reviewState.update { ReviewState.Reject }
+            }
+        }
+    }
+
+    private suspend fun loadReviewTextModel() {
+        withContext(Dispatchers.Default) {
+            _reviewState.update { ReviewState.ImageModelLoading }
+            reviewCategoryClassifier.load()
+            _reviewState.update { ReviewState.IDLE }
         }
     }
 
@@ -97,11 +128,13 @@ class ReviewViewModel(
     companion object {
         class Factory(
             private val reviewRepository: ReviewRepository,
-            private val imageCategoryClassifier: ImageCategoryClassifier
+            private val imageCategoryClassifier: ImageCategoryClassifier,
+            private val reviewCategoryClassifier: ReviewCategoryClassifier,
+            private val imageHandler: ImageHandler
         ) : ViewModelProvider.Factory  {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return ReviewViewModel(reviewRepository, imageCategoryClassifier) as T
+                return ReviewViewModel(reviewRepository, imageCategoryClassifier, reviewCategoryClassifier, imageHandler) as T
             }
         }
     }

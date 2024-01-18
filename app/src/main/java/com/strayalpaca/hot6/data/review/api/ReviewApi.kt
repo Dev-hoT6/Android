@@ -24,7 +24,7 @@ interface ReviewApi {
     @POST("review/create/submit/{Review_ID}")
     suspend fun postAvailableReview(
         @Path("Review_ID") Review_ID : String,
-        @Part file : MultipartBody.Part,
+        @Part file : MultipartBody.Part?,
     ) : Response<ResponsePostReview>
 
 }

@@ -3,7 +3,11 @@ package com.strayalpaca.hot6.data.review
 import com.strayalpaca.hot6.data.review.api.ReviewApi
 import com.strayalpaca.hot6.data.review.model.PostReviewRequestBody
 import com.strayalpaca.hot6.domain.review.Review
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Retrofit
+import java.io.File
 
 class RemoteReviewRepository(
     retrofit: Retrofit
@@ -17,8 +21,15 @@ class RemoteReviewRepository(
         } ?: throw Exception("server error occur, ${response.message()}, ${response.code()}")
     }
 
-    override suspend fun uploadReviewText(text: String, productId: String): Boolean {
-        return true
+    override suspend fun uploadReview(reviewId : String, image : File?): Boolean {
+        val part = image?.asRequestBody("image/*".toMediaType())?.let { requestBody ->
+            MultipartBody.Part.createFormData("file", image.name, requestBody)
+        }
+        val response = reviewRetrofit.postAvailableReview(reviewId, part)
+
+        return response.body()?.let { _ ->
+            response.isSuccessful
+        } ?: throw Exception("server error occur, ${response.message()}, ${response.code()}")
     }
 
     override suspend fun getReviewVector(text: String, productId: String): Pair<String, List<List<Double>>> {

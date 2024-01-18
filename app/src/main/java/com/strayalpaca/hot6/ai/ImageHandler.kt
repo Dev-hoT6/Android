@@ -7,6 +7,9 @@ import android.os.Build
 import android.provider.MediaStore
 import androidx.core.graphics.scale
 import androidx.core.net.toUri
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
 import java.nio.FloatBuffer
 
 class ImageHandler(private val context : Context) {
@@ -16,6 +19,23 @@ class ImageHandler(private val context : Context) {
         val bitmap = urlToBitmap(url)
         val softwareBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true).scale(INPUT_SIZE, INPUT_SIZE)
         return bitmapToFloatBuffer(softwareBitmap)
+    }
+
+    fun urlToFile(url : String) : File {
+        val fileDir = context.filesDir
+        val file = File(fileDir, "review_image.jpg")
+        file.createNewFile()
+
+        val bitmap = urlToBitmap(url)
+        val byteOutputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteOutputStream)
+        FileOutputStream(file).use { fileOutputStream ->
+            fileOutputStream.write(byteOutputStream.toByteArray())
+            fileOutputStream.flush()
+        }
+
+        byteOutputStream.close()
+        return file
     }
 
     private fun urlToBitmap(url : String) : Bitmap {
