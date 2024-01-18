@@ -59,7 +59,7 @@ class Yolov8Classifier(private val context : Context) : ImageCategoryClassifier 
                 detectedCategoryIds.add(modelPreferenceIndexToCategoryId(i))
             }
         }
-
+        resultTensor.close()
         return detectedCategoryIds.containsAll(categoryIds)
     }
 }
