@@ -148,20 +148,20 @@ class ReviewActivity : ViewBindingActivity<ActivityReviewBinding>(ActivityReview
         when (state) {
             ReviewState.IDLE -> {
                 setLoading(show = false)
-                setButtonsEnabled(enabled = true)
+                setUiInteractionEnabled(enabled = true)
             }
             ReviewState.Error -> {
                 setLoading(show = false)
                 Toast.makeText(baseContext, getString(R.string.error_request_review), Toast.LENGTH_SHORT).show()
-                setButtonsEnabled(enabled = true)
+                setUiInteractionEnabled(enabled = true)
             }
             ReviewState.Loading -> {
                 setLoading(show = true)
-                setButtonsEnabled(enabled = false)
+                setUiInteractionEnabled(enabled = false)
             }
             ReviewState.Reject -> {
                 setLoading(show = false)
-                setButtonsEnabled(enabled = true)
+                setUiInteractionEnabled(enabled = true)
                 callReviewRejectDialog()
             }
             ReviewState.UploadSuccess -> {
@@ -170,13 +170,13 @@ class ReviewActivity : ViewBindingActivity<ActivityReviewBinding>(ActivityReview
                 setResult(RESULT_OK)
                 finish()
             }
-            ReviewState.ImageModelLoading -> {
+            ReviewState.ModelLoading -> {
                 setLoading(show = true)
-                setButtonsEnabled(enabled = true)
+                setUiInteractionEnabled(enabled = false)
             }
             ReviewState.ImageReject -> {
                 setLoading(show = false)
-                setButtonsEnabled(enabled = true)
+                setUiInteractionEnabled(enabled = true)
                 callImageRejectDialog()
             }
         }
@@ -186,11 +186,12 @@ class ReviewActivity : ViewBindingActivity<ActivityReviewBinding>(ActivityReview
         binding.viewLoading.root.isVisible = show
     }
 
-    private fun setButtonsEnabled(enabled : Boolean) {
+    private fun setUiInteractionEnabled(enabled : Boolean) {
         binding.btnBack.isEnabled = enabled
         binding.btnWriteReview.isEnabled = enabled
         binding.btnAddPhoto.isEnabled = enabled
         binding.btnRemovePhoto.isEnabled = enabled
+        binding.editReview.isEnabled = enabled
     }
 
     private fun callReviewRejectDialog() {

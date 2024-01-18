@@ -66,7 +66,7 @@ class ReviewViewModel(
             }
 
             if (!imageCategoryClassifier.isLoaded()) {
-                _reviewState.update { ReviewState.ImageModelLoading }
+                _reviewState.update { ReviewState.ModelLoading }
                 imageCategoryClassifier.load()
                 _reviewState.update { ReviewState.IDLE }
             }
@@ -115,7 +115,7 @@ class ReviewViewModel(
 
     private suspend fun loadReviewTextModel() {
         withContext(Dispatchers.Default) {
-            _reviewState.update { ReviewState.ImageModelLoading }
+            _reviewState.update { ReviewState.ModelLoading }
             reviewCategoryClassifier.load()
             _reviewState.update { ReviewState.IDLE }
         }
@@ -146,6 +146,6 @@ sealed class ReviewState {
     object Reject : ReviewState()
     object UploadSuccess : ReviewState()
     object Error : ReviewState()
-    object ImageModelLoading : ReviewState()
+    object ModelLoading : ReviewState()
     object ImageReject : ReviewState()
 }
