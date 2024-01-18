@@ -12,14 +12,3 @@ fun modelPreferenceIndexToCategoryId(index : Int) : String {
         else -> "-"
     }
 }
-
-fun getCategoryIdByName(name : String) : String {
-    return when (name) {
-        "상의" -> "01"
-        "하의" -> "02"
-        "아우터" -> "03"
-        "원피스" -> "04"
-        "스커트" -> "05"
-        else -> "-"
-    }
-}

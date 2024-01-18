@@ -13,18 +13,28 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
 import com.strayalpaca.hot6.R
+import com.strayalpaca.hot6.ai.ImageHandler
 import com.strayalpaca.hot6.base.ViewBindingActivity
 import com.strayalpaca.hot6.base.dialog.OneButtonDialog
 import com.strayalpaca.hot6.databinding.ActivityReviewBinding
 import com.strayalpaca.hot6.ai.classifier.ImageCategoryClassifier
 import com.strayalpaca.hot6.ai.classifier.Yolov8Classifier
-import com.strayalpaca.hot6.data.review.DemoReviewRepository
+import com.strayalpaca.hot6.ai.review.FullyConnectedReviewClassifier
+import com.strayalpaca.hot6.base.retrofit.RetrofitClient
+import com.strayalpaca.hot6.data.review.RemoteReviewRepository
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class ReviewActivity : ViewBindingActivity<ActivityReviewBinding>(ActivityReviewBinding::inflate) {
 
-    private val viewModel by viewModels<ReviewViewModel> { ReviewViewModel.Companion.Factory(DemoReviewRepository(), Yolov8Classifier(baseContext)) }
+    private val viewModel by viewModels<ReviewViewModel> {
+        ReviewViewModel.Companion.Factory(
+            RemoteReviewRepository(RetrofitClient.getInstance()),
+            Yolov8Classifier(baseContext),
+            FullyConnectedReviewClassifier(baseContext),
+            ImageHandler(baseContext)
+        )
+    }
     private val maxReviewCount = 120
     private lateinit var imageCategoryClassifier : ImageCategoryClassifier
 

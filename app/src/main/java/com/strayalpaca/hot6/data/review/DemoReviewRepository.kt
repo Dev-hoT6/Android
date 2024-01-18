@@ -2,6 +2,7 @@ package com.strayalpaca.hot6.data.review
 
 import com.strayalpaca.hot6.domain.review.Review
 import kotlinx.coroutines.delay
+import java.io.File
 
 class DemoReviewRepository : ReviewRepository {
     private val reviews = (1 until 10).map {
@@ -17,7 +18,12 @@ class DemoReviewRepository : ReviewRepository {
         delay(1000L)
         return reviews
     }
-    override suspend fun uploadReviewText(text: String, productId: String): Boolean {
-        return productId.isEmpty() || productId[0] == '2'
+
+    override suspend fun uploadReview(reviewId : String, image : File?): Boolean {
+        return true
+    }
+
+    override suspend fun getReviewVector(text: String, productId: String): Pair<String, List<List<Double>>> {
+        return Pair("1", listOf(listOf(0.1)))
     }
 }
