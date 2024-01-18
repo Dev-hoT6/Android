@@ -1,6 +1,7 @@
 package com.strayalpaca.hot6.screen.home.recycler.product
 
 import android.content.Intent
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.strayalpaca.hot6.R
@@ -25,6 +26,10 @@ class ProductItemViewHolder(private val binding : ItemProductBinding) : ViewHold
         binding.tvProductName.text = item.name
         binding.tvProductPrice.text = binding.root.context.getString(R.string.form_price, item.price)
         Glide.with(binding.root.context).load(item.imageUrl).into(binding.imgProduct)
-        binding.tvRank.text = position.toString()
+
+        binding.tvRank.isVisible = position < 100
+        if (position < 100) {
+            binding.tvRank.text = position.toString()
+        }
     }
 }

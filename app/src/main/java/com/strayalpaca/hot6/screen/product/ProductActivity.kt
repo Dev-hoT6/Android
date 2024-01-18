@@ -10,6 +10,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.strayalpaca.hot6.R
 import com.strayalpaca.hot6.base.ViewBindingActivity
 import com.strayalpaca.hot6.databinding.ActivityProductBinding
@@ -162,5 +163,7 @@ class ProductActivity : ViewBindingActivity<ActivityProductBinding>(ActivityProd
 
         (binding.listHashtag.adapter as HashtagItemAdapter).setHashtag(data.hashtags)
         binding.listHashtag.isVisible = data.hashtags.isNotEmpty()
+
+        Glide.with(baseContext).load(data.imageUrl).into(binding.ivProductImage)
     }
 }

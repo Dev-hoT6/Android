@@ -2,6 +2,7 @@ package com.strayalpaca.hot6.screen.home
 
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -53,7 +54,6 @@ class HomeActivity : ViewBindingActivity<ActivityHomeBinding>(ActivityHomeBindin
             is HomeScreenState.Success -> {
                 hideLoadingUi()
                 hideErrorUi()
-                applyHomeScreenData(homeScreenData = homeScreenState.data)
             }
             is HomeScreenState.Loading -> {
                 hideErrorUi()
@@ -64,6 +64,7 @@ class HomeActivity : ViewBindingActivity<ActivityHomeBinding>(ActivityHomeBindin
                 showErrorUi()
             }
         }
+        applyHomeScreenData(homeScreenData = homeScreenState.data)
     }
 
     private fun applyHomeScreenData(homeScreenData: HomeScreenData) {
@@ -74,18 +75,18 @@ class HomeActivity : ViewBindingActivity<ActivityHomeBinding>(ActivityHomeBindin
     }
 
     private fun showErrorUi() {
-
+        binding.viewError.root.isVisible = true
     }
 
     private fun hideErrorUi() {
-
+        binding.viewError.root.isVisible = false
     }
 
     private fun showLoadingUi() {
-
+        binding.viewLoading.root.isVisible = true
     }
 
     private fun hideLoadingUi() {
-
+        binding.viewLoading.root.isVisible = false
     }
 }

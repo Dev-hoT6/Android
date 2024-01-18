@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/gray1"
+        android:scaleType="centerCrop"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintTop_toTopOf="parent"/>
 
@@ -35,6 +36,8 @@
         app:layout_constraintTop_toBottomOf="@id/img_product"
         android:layout_marginTop="4dp"
         android:textSize="12sp"
+        android:maxLines="2"
+        android:ellipsize="end"
         tools:text="상품 이름"/>
 
     <androidx.appcompat.widget.AppCompatTextView
