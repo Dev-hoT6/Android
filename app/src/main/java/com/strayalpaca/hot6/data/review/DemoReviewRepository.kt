@@ -20,4 +20,8 @@ class DemoReviewRepository : ReviewRepository {
     override suspend fun uploadReviewText(text: String, productId: String): Boolean {
         return productId.isEmpty() || productId[0] == '2'
     }
+
+    override suspend fun getReviewVector(text: String, productId: String): Pair<String, List<List<Double>>> {
+        return Pair("1", listOf(listOf(0.1)))
+    }
 }

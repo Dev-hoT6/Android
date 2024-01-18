@@ -5,3 +5,13 @@ data class ResponseProductReview(
     val product : String,
     val detail : List<ReviewDto>
 )
+
+data class ResponseGetReviewVector(
+    val id : String,
+    val vector : String
+)
+
+data class ResponsePostReview(
+    val score : Int,
+    val point : Int
+)
