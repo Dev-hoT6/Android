@@ -2,6 +2,7 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.HoT6" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorPrimary">@color/hot6_blue</item>
+        <item name="colorPrimaryDark">@color/hot6_blue_dark</item>
     </style>
 </resources>
