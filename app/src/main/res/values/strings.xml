@@ -16,7 +16,8 @@
     <string name="form_review_count">리뷰 %d개</string>
     <string name="form_price">%,d원</string>
     <string name="form_point">%,d원 적립</string>
-    <string name="caption_provide">hoT6는 공정한 협력을 통한 신뢰있는 상품을 제공하지 않습니다. 뭐요</string>
+    <string name="caption_provide">본 어플리케이션은 서비스 시연을 위한 앱으로,\n실제 상품을 제공하지 않습니다.</string>
+    <string name="review_of_product_empty">아직 리뷰가 없습니다.\n상품을 구매하고 첫 리뷰를 작성해 보세요!</string>
 
     <string name="input_review">리뷰 입력</string>
     <string name="form_text_max_thres">리뷰는 최대 %d자까지 입력 가능합니다.</string>
