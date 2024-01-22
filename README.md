@@ -1,7 +1,5 @@
 # Review The Review - Android
-프로젝트 상세 설명 추가 예정...  
-이미지 추가 예정...  
-시연 영상 추가 예정...  
+인공지능을 통해 리뷰의 품질을 평가해 리뷰 적립금을 차등적으로 지급하고, 상품과 관련없는 리뷰 작성을 막아주는 서비스인 Review The Review의 안드로이드 데모 앱입니다
 
 ## 주요 기능
 - 리뷰 이미지 등록시 해당 이미지가 본 상품의 카테고리에 속하는지 검사하여 관련없는 이미지는 리뷰에 사용 불가
@@ -42,3 +40,8 @@
   - CategoryUtils.kt : 이미지 모델이 예측한 카테고리 index와 서버에 저장된 카테고리 index를 서로 매치시키는 함수
   - dpToPx.kt : dp단위를 px 단위로 변경하는 함수
   - listUtils.kt : List와 같은 iterable 타입에 적용될 수 있는 유틸 함수
+
+## 시연 영상
+https://github.com/Dev-hoT6/Android/assets/39579912/0fe8318d-2f77-4234-8bc2-6399ceea04af  
+
+https://github.com/Dev-hoT6/Android/assets/39579912/3818739b-923c-470f-925e-3dfdceebad0e  
