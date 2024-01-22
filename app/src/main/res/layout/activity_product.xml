@@ -203,6 +203,7 @@
             <include
                 android:id="@+id/view_review_empty"
                 layout="@layout/view_empty"
+                android:visibility="gone"
                 android:layout_height="0dp"
                 android:layout_width="match_parent"
                 app:layout_constraintTop_toTopOf="@id/list_review"
