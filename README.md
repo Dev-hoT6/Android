@@ -1,6 +1,14 @@
 # Review The Review - Android
 인공지능을 통해 리뷰의 품질을 평가해 리뷰 적립금을 차등적으로 지급하고, 상품과 관련없는 리뷰 작성을 막아주는 서비스인 Review The Review의 안드로이드 데모 앱입니다
 
+<p>
+<img width="18%" src="https://github.com/Dev-hoT6/Android/assets/39579912/e9fd330e-2c71-4a8d-8e82-191b9be1b223"/>
+<img width="18%" src="https://github.com/Dev-hoT6/Android/assets/39579912/789bb2ea-b6a8-42aa-bfca-492c2cabf743"/>
+<img width="18%" src="https://github.com/Dev-hoT6/Android/assets/39579912/8cdd63d6-7d90-4df4-9b05-d7afb157fe0f"/>
+<img width="18%" src="https://github.com/Dev-hoT6/Android/assets/39579912/f3f772e4-3202-4041-84ce-eb39aeda3c40"/>
+<img width="18%" src="https://github.com/Dev-hoT6/Android/assets/39579912/d7e07b00-6f5a-494f-baeb-277688113fac"/>
+</p>
+
 ## 주요 기능
 - 리뷰 이미지 등록시 해당 이미지가 본 상품의 카테고리에 속하는지 검사하여 관련없는 이미지는 리뷰에 사용 불가
 - 리뷰 텍스트 입력시 해당 리뷰글이 본 상품 정보와 관련있는 리뷰인지를 판단하여 관련없는 리뷰글을 업로드하지 못하도록 막는 기능
