@@ -125,6 +125,7 @@ class ProductActivity : ViewBindingActivity<ActivityProductBinding>(ActivityProd
 
     private fun applyReviewListData(reviewListData: ReviewListData) {
         binding.tvReviewCount.text = getString(R.string.form_review_count, reviewListData.totalCount)
+        binding.viewReviewEmpty.root.isVisible = reviewListData.reviews.isEmpty()
         (binding.listReview.adapter as ReviewItemAdapter).setReview(reviewListData.reviews)
     }
 

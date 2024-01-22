@@ -201,6 +201,14 @@
                 android:layout_marginTop="12dp" />
 
             <include
+                android:id="@+id/view_review_empty"
+                layout="@layout/view_empty"
+                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                app:layout_constraintTop_toTopOf="@id/list_review"
+                app:layout_constraintBottom_toBottomOf="@id/list_review"/>
+
+            <include
                 android:id="@+id/view_review_loading"
                 layout="@layout/view_loading"
                 android:layout_height="0dp"
