@@ -51,7 +51,7 @@ class FullyConnectedReviewClassifier(private val context : Context) : ReviewCate
         resultTensor.close()
         inputTensor.close()
 
-        return outputs[0] >= 0.5
+        return outputs[0] >= 0.9995
     }
 
     private fun convertDoubleListToFloatBuffer(doubleList: List<List<Double>>): FloatBuffer {
